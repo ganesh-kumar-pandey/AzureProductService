@@ -57,4 +57,20 @@ So, Key Vault = Config + Encryption + Hashing + Logging + Access Control + Rotat
 
 04-August-2026
 ---------------------
+1. Devops
+2. gitHub
+3. agent
+4. pull on Github
+5. Devops classic Architecture
+6. Azure Appservice
+devopsapiservicecicd-dxdzchb9eegnbfa7.centralindia-01.azurewebsites.net
 
+Github Steps
+-----------------
+echo "# AzureProductService" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/ganesh-kumar-pandey/AzureProductService.git
+git push -u origin main
