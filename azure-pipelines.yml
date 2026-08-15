@@ -7,13 +7,32 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: GKP-AgentPool-Self
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '10.x'
+  displayName: 'Install .NET SDK'
+
+- script: dotnet restore src/productservice/productservice.csproj
+  displayName: 'Restore'
+
+- script: dotnet build src/productservice/productservice.csproj --no-restore
+  displayName: 'Build'
+
+- script: dotnet test test/MyNUnitTests/MyNUnitTests.csproj
+  displayName: 'Test'
+
+- script: dotnet publish src/productservice/productservice.csproj -c Release -o $(Build.ArtifactStagingDirectory)
+  displayName: 'Publish'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'MyServiceConnection'
+    appType: 'webApp'
+    appName: 'DevopsAPIServiceCICD'
+    package: '$(Build.ArtifactStagingDirectory)'
+  displayName: 'Deploy to Azure Web App'
